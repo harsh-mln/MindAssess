@@ -1,0 +1,145 @@
+.gooey-nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* Use CSS variables for colors, easily overridden by Tailwind classes */
+  --bg-color: transparent;
+  --text-color: #64748b; /* slate-500 */
+  --active-text-color: #ffffff;
+  --effect-bg-color: #0ea5e9; /* brand-primary */
+  
+  --color-1: #0ea5e9; 
+  --color-2: #8b5cf6; /* violet-500 */
+  --color-3: #c084fc; /* purple-400 */
+  --color-4: #38bdf8; /* sky-400 */
+}
+
+/* Dark mode overrides (optional if body has dark class) */
+.dark .gooey-nav-container {
+  --text-color: #cbd5e1; /* slate-300 */
+}
+
+.gooey-nav-container nav {
+  background-color: var(--bg-color);
+  padding: 0;
+  border-radius: 999px;
+  position: relative;
+  z-index: 2;
+}
+
+.gooey-nav-container nav ul {
+  display: flex;
+  font-size: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gooey-nav-container nav ul li {
+  position: relative;
+  transition: opacity 0.3s;
+}
+
+.gooey-nav-container nav ul li:hover a {
+  opacity: 1;
+}
+
+.gooey-nav-container nav ul li.active a {
+  opacity: 1;
+  color: var(--active-text-color);
+}
+
+.gooey-nav-container nav ul li a {
+  color: var(--text-color);
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  padding: 8px 16px;
+  text-decoration: none;
+  opacity: 0.8;
+  position: relative;
+  transition: opacity 0.3s, color 0.3s;
+  z-index: 1;
+}
+
+.gooey-nav-container .effect {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  z-index: 1;
+  transition: left 0.4s ease-in-out, top 0.4s ease-in-out, width 0.4s ease-in-out, height 0.4s ease-in-out;
+}
+
+.gooey-nav-container .effect.filter {
+  background-color: var(--effect-bg-color);
+  filter: url(#goo);
+}
+
+.gooey-nav-container .effect.text {
+  color: var(--active-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.gooey-nav-container .effect.text.active {
+  animation: txt var(--time) forwards;
+}
+
+@keyframes txt {
+  0% { transform: scale(1); }
+  33% { transform: scale(0.9); }
+  66% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.particle.active {
+  animation:
+    t var(--time) ease-in-out forwards,
+    r var(--time) ease-in-out forwards;
+}
+
+.particle.active .point {
+  animation: s var(--time) forwards;
+}
+
+.particle .point {
+  position: absolute;
+  display: block;
+  width: 15px;
+  height: 15px;
+  background-color: var(--color);
+  border-radius: 50%;
+  top: -7.5px;
+  left: -7.5px;
+}
+
+@keyframes t {
+  0% { transform: translate(0px, 0px); }
+  100% { transform: translate(var(--start-x), var(--start-y)); }
+}
+
+@keyframes r {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(var(--rotate)); }
+}
+
+@keyframes s {
+  0% { transform: scale(0); opacity: 1; }
+  20% { transform: scale(var(--scale)); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
