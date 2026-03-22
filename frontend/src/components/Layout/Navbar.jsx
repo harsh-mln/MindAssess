@@ -47,6 +47,18 @@ const Navbar = () => {
             
             <ThemeToggle />
             
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => window.open('https://988lifeline.org/', '_blank')}
+              className="px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-red-500/20 transition-colors flex items-center gap-2 mr-2"
+            >
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              Crisis Help
+            </motion.button>
+
             <Link to={user ? "/profile" : "/auth"}>
               <motion.div whileHover={{ scale: 1.05 }} className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-brand-primary p-[2px] cursor-pointer shadow-md">
                 <div className="w-full h-full rounded-full bg-white dark:bg-[#0B0C10] overflow-hidden flex items-center justify-center">
@@ -57,6 +69,15 @@ const Navbar = () => {
           </div>
 
           <div className="md:hidden flex items-center gap-4">
+            <button 
+              onClick={() => window.open('https://988lifeline.org/', '_blank')}
+              className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full transition-colors"
+              aria-label="Crisis Help"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </button>
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
