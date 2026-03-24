@@ -1,88 +1,122 @@
-const generateReport = (responses) => {
-  let anxietyScore = 0;
-  let depressionScore = 0;
+export const generateReport = (responses) => {
+  const scores = {
+    "Anxiety Markers": 0,
+    "Depression Markers": 0,
+    "Focus & ADHD": 0,
+    "Trauma & Stress": 0,
+    "Impact & Function": 0
+  };
+  let runtimeGlobalTotal = 0;
+  console.log(`--- Report Generation Start: Processing ${responses.length} responses ---`);
 
-  // Tally scores based on category embedded in question context
-  responses.forEach(r => {
-    if (r.category === 'GAD-7 (Anxiety)') anxietyScore += r.scoreValue;
-    if (r.category === 'PHQ-9 (Depression)') depressionScore += r.scoreValue;
+  // Tally scores based on category
+  responses.forEach((r, index) => {
+    const scoreVal = Number(r.scoreValue) || 0;
+    runtimeGlobalTotal += scoreVal;
+    
+    console.log(`[Response ${index + 1}] Category: "${r.category}", Score: ${scoreVal}`);
+
+    const rawCategory = (r.category || "").trim();
+    const cleanCategory = rawCategory.toLowerCase();
+    
+    // Find matching key in our scores object (case-insensitive)
+    const matchKey = Object.keys(scores).find(key => 
+      key.toLowerCase() === cleanCategory
+    );
+
+    if (matchKey) {
+      scores[matchKey] += scoreVal;
+    } 
+    // Legacy mapping support
+    else if (cleanCategory.includes('anxiety')) {
+      scores["Anxiety Markers"] += scoreVal;
+    } 
+    else if (cleanCategory.includes('depression')) {
+      scores["Depression Markers"] += scoreVal;
+    }
+    // General fallback
+    else {
+      scores["Impact & Function"] += scoreVal;
+    }
   });
 
-  const totalScore = anxietyScore + depressionScore;
+  const totalScore = runtimeGlobalTotal;
+  console.log('Final Categorized Scores:', scores);
+  console.log('Final Calculated Global Total:', totalScore);
 
-  // Clinical Maximums
-  const MAX_PHQ9 = 27;
-  const MAX_GAD7 = 21;
+  // Maximum score per category (3 questions * 2)
+  const MAX_CAT = 6;
+  const MIN_CAT = -6;
 
-  // Standard PHQ-9 Thresholds
-  const determinePHQ9Level = (score) => {
-    if (score <= 4) return 'Minimal';
-    if (score <= 9) return 'Mild';
-    if (score <= 14) return 'Moderate';
-    if (score <= 19) return 'Moderately Severe';
-    return 'Severe';
+  const determineLevel = (score) => {
+    if (score <= -2) return 'Stable';
+    if (score <= 2) return 'Mildly Stressed';
+    if (score <= 4) return 'Moderate Burden';
+    return 'High Burden';
   };
 
-  // Standard GAD-7 Thresholds
-  const determineGAD7Level = (score) => {
-    if (score <= 4) return 'Minimal';
-    if (score <= 9) return 'Mild';
-    if (score <= 14) return 'Moderate';
-    return 'Severe';
-  };
-
-  const anxietyLevel = determineGAD7Level(anxietyScore);
-  const depressionLevel = determinePHQ9Level(depressionScore);
-
-  let summaryText = `Based on your responses to the clinical PHQ-9 and GAD-7 assessments, your profile indicates `;
+  let summaryText = `Following your comprehensive multi-disorder screen, your results indicate `;
   
-  if (totalScore < 10) {
-    summaryText += `a stable mental health presentation with minimal active symptomatology.`;
-  } else if (totalScore < 20) {
-    summaryText += `mild to moderate mental health stressors that warrant behavioral observation.`;
+  if (totalScore <= 0) {
+    summaryText += `a highly resilient psychological state with minimal active clinical indicators. Continue your current self-care practices.`;
+  } else if (totalScore <= 10) {
+    summaryText += `mild psychological friction across some areas. These are common during stress but worth monitoring for patterns.`;
+  } else if (totalScore <= 20) {
+    summaryText += `a moderate level of psychological burden. We recommend scheduling a consultation with a mental health professional for a deeper evaluation.`;
   } else {
-    summaryText += `a significant psychological burden that highly suggests seeking professional consultation.`;
+    summaryText += `a significant level of clinical burden. Your markers for distress are high, and we strongly advise immediate clinical support.`;
   }
 
-  const generatedReport = {
+  const breakdown = {};
+  Object.keys(scores).forEach(cat => {
+    const level = determineLevel(scores[cat]);
+    breakdown[cat] = {
+      score: scores[cat],
+      maxScore: MAX_CAT,
+      level: level,
+      insight: getInsight(cat, level)
+    };
+  });
+
+  return {
     overview: summaryText,
-    breakdown: {
-      "GAD-7 (Anxiety)": {
-        score: anxietyScore,
-        maxScore: MAX_GAD7,
-        level: anxietyLevel,
-        insight: getInsight('Anxiety', anxietyLevel)
-      },
-      "PHQ-9 (Depression)": {
-        score: depressionScore,
-        maxScore: MAX_PHQ9,
-        level: depressionLevel,
-        insight: getInsight('Depression', depressionLevel)
-      }
-    },
+    breakdown,
     totalScore
   };
-
-  return generatedReport;
 };
 
 const getInsight = (category, level) => {
   const insights = {
-    Anxiety: {
-      Minimal: "Your anxiety markers are remarkably low. Continue implementing your current coping mechanisms.",
-      Mild: "You're exhibiting slight signs of psychological friction. Consider brief mindfulness exercises.",
-      Moderate: "Your responses denote a sustained state of hyper-arousal. Pattern disruption techniques are recommended.",
-      Severe: "Critical levels of anxiety reported. This level of nervous system activation requires clinical attention."
+    "Anxiety Markers": {
+      Stable: "Your nervous system markers are well-regulated. Anxiety is currently within normal clinical limits.",
+      "Mildly Stressed": "Minor physiological hyper-arousal detected. Short breathing exercises may help during peaks.",
+      "Moderate Burden": "Predictable patterns of worry are impacting your daily state. Awareness techniques are recommended.",
+      "High Burden": "Significant markers for GAD or Panic detected. Professional intervention is suggested to manage symptoms."
     },
-    Depression: {
-      Minimal: "No significant depressive markers isolated. Affect appears regulated.",
-      Mild: "Transient low mood detected. Monitor sleep architecture and social engagement.",
-      Moderate: "Pronounced anhedonia and low energy indicated. Therapeutic intervention could be highly beneficial.",
-      "Moderately Severe": "Your depressive score suggests major impacts on daily function. Consult a mental health provider.",
-      Severe: "Severe depressive symptomatology evident. Immediate clinical evaluation is strongly advised."
+    "Depression Markers": {
+      Stable: "No significant depressive affect detected. Emotional regulation appears strong.",
+      "Mildly Stressed": "Slight indicators of low mood or energy. Monitor sleep and social engagement closely.",
+      "Moderate Burden": "Markers suggest persistent anhedonia or low affect. A behavioral activation plan could be beneficial.",
+      "High Burden": "Strong indicators of clinical depression. This warrants immediate consultation with a professional."
+    },
+    "Focus & ADHD": {
+      Stable: "Executive functioning and focus appear to be within stable ranges for your context.",
+      "Mildly Stressed": "Occasional distractibility detected, possibly stress-related. Try mono-tasking strategies.",
+      "Moderate Burden": "Noticeable disruption in concentration and task completion. Consider an ADHD-focused evaluation.",
+      "High Burden": "Severe executive dysfunction markers. Clinical support for ADHD or concentration is highly recommended."
+    },
+    "Trauma & Stress": {
+      Stable: "No signs of acute traumatic stress or intrusive memory patterns in your current state.",
+      "Mildly Stressed": "Slight sensitivity to past stressors detected. Focus on present-moment grounding.",
+      "Moderate Burden": "Intrusive thoughts or detachment markers are evident. Specialized stress-trauma support is advised.",
+      "High Burden": "Significant indicators of PTSD or severe traumatic stress. Trauma-informed clinical care is priority."
+    },
+    "Impact & Function": {
+      Stable: "Your mental state is currently allowing for effective social and occupational functioning.",
+      "Mildly Stressed": "Functional impact is minimal but noticeable in certain high-stress social environments.",
+      "Moderate Burden": "Clear signs that your mental health is creating friction in your social life and work productivity.",
+      "High Burden": "Critical impact on functional health. Professional support is necessary to restore daily operations."
     }
   };
-  return insights[category][level] || "";
+  return insights[category] ? (insights[category][level] || "") : "";
 };
-
-module.exports = { generateReport };

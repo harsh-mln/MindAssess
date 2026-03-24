@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const User = require('./models/User');
-require('dotenv').config();
+import mongoose from 'mongoose';
+import User from './models/User.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const testUser = async () => {
   await mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://hg9269748_db_user:HPzj3kj6K5rOIh9e@cluster0.dilo67p.mongodb.net/?appName=Cluster0');

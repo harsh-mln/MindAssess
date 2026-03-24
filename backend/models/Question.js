@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const QuestionSchema = new mongoose.Schema({
   // A unique string ID (e.g., "dep_q1", "anx_q5") to make branching easier to read
@@ -25,4 +25,4 @@ const QuestionSchema = new mongoose.Schema({
   isTerminal: { type: Boolean, default: false }  // If true, the test ends after this
 });
 
-module.exports = mongoose.model('Question', QuestionSchema);
+export default mongoose.model('Question', QuestionSchema);

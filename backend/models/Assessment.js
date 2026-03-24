@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const AssessmentSchema = new mongoose.Schema({
   // Reference to the user (can be null for guest users)
@@ -34,4 +34,4 @@ const AssessmentSchema = new mongoose.Schema({
 AssessmentSchema.index({ userId: 1, testType: 1 });
 AssessmentSchema.index({ status: 1 });
 
-module.exports = mongoose.model('Assessment', AssessmentSchema);
+export default mongoose.model('Assessment', AssessmentSchema);

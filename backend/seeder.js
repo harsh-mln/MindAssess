@@ -1,117 +1,117 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const Question = require('./models/Question');
-const connectDB = require('./config/db');
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import Question from './models/Question.js';
+import connectDB from './config/db.js';
 
 dotenv.config();
 connectDB();
 
 const standardOptions = (nextId) => [
-  { label: "Not at all", value: 0, nextQuestionId: nextId },
-  { label: "Several days", value: 1, nextQuestionId: nextId },
-  { label: "More than half the days", value: 2, nextQuestionId: nextId },
-  { label: "Nearly every day", value: 3, nextQuestionId: nextId }
+  { label: "Strongly Agree", value: 2, nextQuestionId: nextId },
+  { label: "Agree", value: 1, nextQuestionId: nextId },
+  { label: "Disagree", value: -1, nextQuestionId: nextId },
+  { label: "Strongly Disagree", value: -2, nextQuestionId: nextId }
 ];
 
 const sampleQuestions = [
-  // --- PHQ-9 (9 Questions) ---
+  // --- Category: Anxiety (GAD) ---
   {
-    questionId: "phq_01",
-    text: "Little interest or pleasure in doing things",
-    category: "PHQ-9 (Depression)",
+    questionId: "q01",
+    text: "I often find it hard to stop or control my constant worrying.",
+    category: "Anxiety Markers",
     isInitial: true,
-    options: standardOptions("phq_02")
+    options: standardOptions("q02")
   },
   {
-    questionId: "phq_02",
-    text: "Feeling down, depressed, or hopeless",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_03")
+    questionId: "q02",
+    text: "I frequently experience sudden, intense surges of fear or panic without warning.",
+    category: "Anxiety Markers",
+    options: standardOptions("q03")
   },
   {
-    questionId: "phq_03",
-    text: "Trouble falling or staying asleep, or sleeping too much",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_04")
-  },
-  {
-    questionId: "phq_04",
-    text: "Feeling tired or having little energy",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_05")
-  },
-  {
-    questionId: "phq_05",
-    text: "Poor appetite or overeating",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_06")
-  },
-  {
-    questionId: "phq_06",
-    text: "Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_07")
-  },
-  {
-    questionId: "phq_07",
-    text: "Trouble concentrating on things, such as reading the newspaper or watching television",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_08")
-  },
-  {
-    questionId: "phq_08",
-    text: "Moving or speaking so slowly that other people could have noticed. Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("phq_09")
-  },
-  {
-    questionId: "phq_09",
-    text: "Thoughts that you would be better off dead, or of hurting yourself in some way",
-    category: "PHQ-9 (Depression)",
-    options: standardOptions("gad_01")
+    questionId: "q03",
+    text: "I feel on edge, restless, or find it hard to sit still for long periods.",
+    category: "Anxiety Markers",
+    options: standardOptions("q04")
   },
 
-  // --- GAD-7 (7 Questions) ---
+  // --- Category: Depression ---
   {
-    questionId: "gad_01",
-    text: "Feeling nervous, anxious, or on edge",
-    category: "GAD-7 (Anxiety)",
-    options: standardOptions("gad_02")
+    questionId: "q04",
+    text: "I have little interest or pleasure in doing things I used to enjoy.",
+    category: "Depression Markers",
+    options: standardOptions("q05")
   },
   {
-    questionId: "gad_02",
-    text: "Not being able to stop or control worrying",
-    category: "GAD-7 (Anxiety)",
-    options: standardOptions("gad_03")
+    questionId: "q05",
+    text: "I often feel like my future is hopeless and things will never get better.",
+    category: "Depression Markers",
+    options: standardOptions("q06")
   },
   {
-    questionId: "gad_03",
-    text: "Worrying too much about different things",
-    category: "GAD-7 (Anxiety)",
-    options: standardOptions("gad_04")
+    questionId: "q06",
+    text: "I feel tired, sluggish, and have little energy even after resting.",
+    category: "Depression Markers",
+    options: standardOptions("q07")
+  },
+
+  // --- Category: Focus & ADHD ---
+  {
+    questionId: "q07",
+    text: "I find it extremely difficult to focus on tasks or follow complex conversations.",
+    category: "Focus & ADHD",
+    options: standardOptions("q08")
   },
   {
-    questionId: "gad_04",
-    text: "Trouble relaxing",
-    category: "GAD-7 (Anxiety)",
-    options: standardOptions("gad_05")
+    questionId: "q08",
+    text: "I frequently lose things needed for tasks, like keys, wallets, or phones.",
+    category: "Focus & ADHD",
+    options: standardOptions("q09")
   },
   {
-    questionId: "gad_05",
-    text: "Being so restless that it's hard to sit still",
-    category: "GAD-7 (Anxiety)",
-    options: standardOptions("gad_06")
+    questionId: "q09",
+    text: "I often act on impulse without considering the consequences.",
+    category: "Focus & ADHD",
+    options: standardOptions("q10")
+  },
+
+  // --- Category: Trauma & Stress ---
+  {
+    questionId: "q10",
+    text: "I am troubled by vivid memories or 'flashbacks' of a past traumatic event.",
+    category: "Trauma & Stress",
+    options: standardOptions("q11")
   },
   {
-    questionId: "gad_06",
-    text: "Becoming easily annoyed or irritable",
-    category: "GAD-7 (Anxiety)",
-    options: standardOptions("gad_07")
+    questionId: "q11",
+    text: "I experience intrusive, unwanted thoughts that I find distressing and hard to block.",
+    category: "Trauma & Stress",
+    options: standardOptions("q12")
   },
   {
-    questionId: "gad_07",
-    text: "Feeling afraid as if something awful might happen",
-    category: "GAD-7 (Anxiety)",
+    questionId: "q12",
+    text: "I feel detached from reality or from my own emotions at times.",
+    category: "Trauma & Stress",
+    options: standardOptions("q13")
+  },
+
+  // --- Category: Impact & Sleep ---
+  {
+    questionId: "q13",
+    text: "I find it hard to fall asleep or I wake up multiple times during the night.",
+    category: "Impact & Function",
+    options: standardOptions("q14")
+  },
+  {
+    questionId: "q14",
+    text: "I find myself avoiding social situations due to a fear of being judged or rejected.",
+    category: "Impact & Function",
+    options: standardOptions("q15")
+  },
+  {
+    questionId: "q15",
+    text: "I feel that my current mental state is severely impacting my ability to work or maintain relationships.",
+    category: "Impact & Function",
     isTerminal: true,
     options: standardOptions(null)
   }
@@ -121,7 +121,10 @@ const importData = async () => {
   try {
     await Question.deleteMany();
     await Question.insertMany(sampleQuestions);
-    console.log('16 PHQ-9 & GAD-7 Questions Imported Successfully!');
+    const lastQ = await Question.findOne({ questionId: "q15" });
+    console.log(`[SEED VERIFY] Last Question Terminal Status: ${lastQ.isTerminal} (ID: ${lastQ.questionId})`);
+    console.log(`[SEED VERIFY] Full Question JSON: ${JSON.stringify(lastQ, null, 2)}`);
+    console.log('15 Multi-Disorder Questions with -2 to 2 Matrix Imported Successfully!');
     process.exit();
   } catch (error) {
     console.error(error);

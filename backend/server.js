@@ -1,10 +1,15 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const connectDB = require('./config/db');
-const errorHandler = require('./middleware/error');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
+import connectDB from './config/db.js';
+import errorHandler from './middleware/error.js';
+
+// Route files
+import authRoutes from './routes/authRoutes.js';
+import assessmentRoutes from './routes/assessmentRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -12,17 +17,7 @@ dotenv.config();
 // Connect to database
 connectDB();
 
-// Route files
-const authRoutes = require('./routes/authRoutes');
-// Create a dummy assessment route if it doesn't exist, or import existing
-try {
-  var assessmentRoutes = require('./routes/assessmentRoutes');
-} catch (e) {
-  var assessmentRoutes = express.Router(); // fallback
-}
-
 const app = express();
-const cookieParser = require('cookie-parser');
 
 // Body parser
 app.use(express.json());
@@ -36,6 +31,13 @@ app.use(helmet());
 // Enable CORS
 app.use(cors());
 
+// Request logging middleware for debugging
+app.use((req, res, next) => {
+  console.log(`[HTTP] ${req.method} ${req.path}`);
+  if (req.method === 'POST') console.log('Body:', req.body);
+  next();
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 mins
@@ -45,13 +47,11 @@ app.use(limiter);
 
 // Mount routers
 app.use('/api/auth', authRoutes);
-if (assessmentRoutes) {
-  app.use('/api/assessment', assessmentRoutes);
-}
+app.use('/api/assessment', assessmentRoutes);
 
 // Error Handler Middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`));
+app.listen(PORT, () => console.log(`--- [V2.0] --- Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`));

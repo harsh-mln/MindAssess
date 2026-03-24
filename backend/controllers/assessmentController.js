@@ -1,11 +1,11 @@
-const Assessment = require('../models/Assessment');
-const Question = require('../models/Question');
-const { generateReport } = require('../utils/reportGenerator');
+import Assessment from '../models/Assessment.js';
+import Question from '../models/Question.js';
+import { generateReport } from '../utils/reportGenerator.js';
 
 // @desc    Get the first question to start the assessment
 // @route   GET /api/assessment/start
 // @access  Public (or Private depending on requirements)
-exports.startAssessment = async (req, res, next) => {
+export const startAssessment = async (req, res, next) => {
   try {
     const startQuestion = await Question.findOne({ isInitial: true });
     
@@ -25,7 +25,7 @@ exports.startAssessment = async (req, res, next) => {
 // @desc    Submit an answer and get the next question
 // @route   POST /api/assessment/answer
 // @access  Public
-exports.submitAnswer = async (req, res, next) => {
+export const submitAnswer = async (req, res, next) => {
   try {
     const { questionId, selectedOptionValue, assessmentId } = req.body;
 
@@ -55,7 +55,7 @@ exports.submitAnswer = async (req, res, next) => {
     // Create or update assessment
     if (!assessmentId) {
       assessment = await Assessment.create({
-        testType: 'PHQ-9 & GAD-7',
+        testType: 'Comprehensive Multi-Disorder Screen',
         userId: req.user.id,
         responses: [userResponse],
         status: currentQuestion.isTerminal ? 'completed' : 'in-progress'
@@ -64,19 +64,28 @@ exports.submitAnswer = async (req, res, next) => {
       assessment = await Assessment.findOne({ _id: assessmentId, userId: req.user.id });
       if (!assessment) return res.status(404).json({ success: false, error: 'Assessment not found' });
       assessment.responses.push(userResponse);
+      console.log(`[Assessment Controller] Added response for ${questionId}. Total responses now: ${assessment.responses.length}`);
+      
       if (currentQuestion.isTerminal) {
         assessment.status = 'completed';
       }
       await assessment.save();
     }
 
-    // Check if terminal
-    if (currentQuestion.isTerminal) {
-      // GENERATE REPORT LOGIC HERE
-      const report = generateReport(assessment.responses);
+    // Check if terminal (Double check: by flag OR by absence of next question)
+    const isFinished = currentQuestion.isTerminal || !selectedOption.nextQuestionId;
+    console.log(`[Assessment Controller] Is assessment taking final step? ${isFinished} (nextId: ${selectedOption.nextQuestionId})`);
+
+    if (isFinished) {
+      // Use clean JSON stringification to ensure the report generator gets pure data
+      const cleanResponses = JSON.parse(JSON.stringify(assessment.responses));
+      const report = generateReport(cleanResponses);
+      
+      console.log('--- FINAL REPORT GENERATED ---');
+      console.log('Final Score:', report.totalScore);
       
       assessment.report = report;
-      assessment.finalScore = report.totalScore;
+      assessment.finalScore = Number(report.totalScore) || 0;
       await assessment.save();
 
       return res.status(200).json({
@@ -87,8 +96,9 @@ exports.submitAnswer = async (req, res, next) => {
       });
     }
 
-    // Not terminal, fetch next question
+    // Not terminal, fetch next question: log the query for debugging
     const nextQuestion = await Question.findOne({ questionId: selectedOption.nextQuestionId });
+    console.log(`[Assessment Controller] fetching next question: ${selectedOption.nextQuestionId} (found: ${!!nextQuestion})`);
     
     res.status(200).json({
       success: true,
@@ -105,7 +115,7 @@ exports.submitAnswer = async (req, res, next) => {
 // @desc    Get a specific user's assessments
 // @route   GET /api/assessment/history
 // @access  Private
-exports.getHistory = async (req, res, next) => {
+export const getHistory = async (req, res, next) => {
   try {
     // Requires auth middleware to set req.user
     const assessments = await Assessment.find({ userId: req.user.id }).sort('-createdAt');

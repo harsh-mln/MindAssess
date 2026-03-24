@@ -1,6 +1,6 @@
-const express = require('express');
-const { startAssessment, submitAnswer, getHistory } = require('../controllers/assessmentController');
-const { protect } = require('../middleware/auth');
+import express from 'express';
+import { startAssessment, submitAnswer, getHistory } from '../controllers/assessmentController.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -8,4 +8,4 @@ router.get('/start', protect, startAssessment);
 router.post('/answer', protect, submitAnswer);
 router.get('/history', protect, getHistory);
 
-module.exports = router;
+export default router;
