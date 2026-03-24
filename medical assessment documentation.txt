@@ -5,6 +5,10 @@ questions are not in db
 total score not showing question number not showing how many questions left now showing 
 
 
+To-
+OAuth
+assessement engine
+
 
 
 FIXED :-

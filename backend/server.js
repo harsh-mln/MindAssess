@@ -11,11 +11,18 @@ import errorHandler from './middleware/error.js';
 import authRoutes from './routes/authRoutes.js';
 import assessmentRoutes from './routes/assessmentRoutes.js';
 
+import session from 'express-session';
+import passport from 'passport';
+import passportConfig from './config/passport.js';
+
 // Load env vars
 dotenv.config();
 
 // Connect to database
 connectDB();
+
+// Passport config
+passportConfig(passport);
 
 const app = express();
 
@@ -24,6 +31,19 @@ app.use(express.json());
 
 // Cookie parser
 app.use(cookieParser());
+
+// Express session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'secret',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Set security headers
 app.use(helmet());
