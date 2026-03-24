@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 import LandingPage from './features/landing/LandingPage';
+
+// Lazy load the Demo Features page to optimize main bundle size
+const DemoFeatures = lazy(() => import('./features/landing/DemoFeatures'));
 import UserDashboard from './features/dashboard/UserDashboard';
 import AssessmentEngine from './features/assessment/AssessmentEngine';
 import AuthPage from './features/auth/AuthPage';
@@ -15,12 +19,28 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen font-sans selection:bg-brand-primary selection:text-white">
+          <div className="flex flex-col min-h-screen font-sans selection:bg-brand-primary selection:text-white">
             <Navbar />
-            <main className="container mx-auto px-4 py-8 relative z-10">
+            <main className="flex-grow container mx-auto px-4 py-8 relative z-10">
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />
+                
+                {/* Lazy Loaded Route */}
+                <Route 
+                  path="/demo" 
+                  element={
+                    <Suspense fallback={
+                      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+                        <div className="w-12 h-12 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin"></div>
+                        <p className="text-slate-500 font-medium animate-pulse">Loading amazing ideas...</p>
+                      </div>
+                    }>
+                      <DemoFeatures />
+                    </Suspense>
+                  } 
+                />
+                
                 <Route path="/auth" element={<AuthPage />} />
                 
                 {/* Protected Routes */}
@@ -41,6 +61,7 @@ function App() {
                 } />
               </Routes>
             </main>
+            <Footer />
           </div>
         </Router>
       </AuthProvider>
