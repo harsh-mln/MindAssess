@@ -1,0 +1,14 @@
+BUGS :-
+
+signup and log in is failing 
+questions are not in db 
+total score not showing question number not showing how many questions left now showing 
+
+
+
+
+FIXED :-
+
+signup and login
+questions showing
+showing question number not showing how many questions left now showing 
