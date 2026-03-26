@@ -12,8 +12,22 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showLibrary, setShowLibrary] = useState(false);
+  const [sparks, setSparks] = useState([]);
   const { user } = useAuth();
   const dropdownRef = useRef(null);
+
+  const triggerSpark = () => {
+    const id = Date.now();
+    const newSparks = Array.from({ length: 8 }).map((_, i) => ({
+      id: `${id}-${i}`,
+      angle: (i * 45) * (Math.PI / 180),
+      velocity: 40 + Math.random() * 40
+    }));
+    setSparks(prev => [...prev.slice(-16), ...newSparks]);
+    setTimeout(() => {
+      setSparks(prev => prev.filter(s => !newSparks.find(ns => ns.id === s.id)));
+    }, 1000);
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -38,13 +52,41 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0 flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
+            <Link 
+              to="/" 
+              onClick={triggerSpark}
+              className="group flex items-center gap-2 relative"
+            >
+              {/* Click Spark Particles */}
+              <AnimatePresence>
+                {sparks.map((spark) => (
+                  <motion.div
+                    key={spark.id}
+                    initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+                    animate={{ 
+                      x: Math.cos(spark.angle) * spark.velocity, 
+                      y: Math.sin(spark.angle) * spark.velocity,
+                      scale: 0,
+                      opacity: 0 
+                    }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="absolute left-4 top-4 w-1.5 h-1.5 rounded-full bg-brand-primary pointer-events-none z-50 shadow-lg shadow-brand-primary/50"
+                  />
+                ))}
+              </AnimatePresence>
+
+              <motion.div 
+                whileTap={{ scale: 0.8 }}
+                className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-primary to-purple-600 flex items-center justify-center text-white font-bold shadow-lg transition-transform"
+              >
                 M
-              </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              </motion.div>
+              <motion.span 
+                whileHover={{ x: 2 }}
+                className="text-xl font-bold tracking-tight text-slate-900 dark:text-white"
+              >
                 Mind<span className="text-brand-primary">Assess</span>
-              </span>
+              </motion.span>
             </Link>
 
             {/* Desktop Health Library Link */}
