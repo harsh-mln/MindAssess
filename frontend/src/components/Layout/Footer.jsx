@@ -1,24 +1,25 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaGithub, FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
+import { FaInstagram, FaGithub, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { MdFavorite, MdLocalHospital, MdArrowForward } from 'react-icons/md';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: <FaGithub />, url: 'https://github.com', label: 'GitHub' },
+    { icon: <FaGithub />, url: 'https://github.com/khanndelwalharshit/MENTAL-HEALTH-ASSESSMENT', label: 'GitHub' },
     { icon: <FaInstagram />, url: 'https://instagram.com', label: 'Instagram' },
     { icon: <FaFacebookF />, url: 'https://facebook.com', label: 'Facebook' },
-    { icon: <FaTwitter />, url: 'https://twitter.com', label: 'Twitter' },
+    { icon: <FaXTwitter />, url: 'https://twitter.com', label: 'X (Twitter)' },
     { icon: <FaLinkedinIn />, url: 'https://linkedin.com', label: 'LinkedIn' },
   ];
 
   const quickLinks = [
     { text: 'Take Assessment', path: '/assessment' },
     { text: 'Your Dashboard', path: '/dashboard' },
-    { text: 'Crisis Resources', path: '#' },
+    { text: 'Crisis Resources', path: 'https://icallhelpline.org/', isExternal: true },
     { text: 'Privacy Policy', path: '#' },
     { text: 'Terms of Service', path: '#' }
   ];
@@ -64,17 +65,33 @@ const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <Link 
-                    to={link.path} 
-                    className="group flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
-                  >
-                    <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 mr-2 text-brand-primary">
-                      <MdArrowForward />
-                    </span>
-                    <span className="transform group-hover:translate-x-1 transition-transform duration-300">
-                      {link.text}
-                    </span>
-                  </Link>
+                    {link.isExternal ? (
+                      <a 
+                        href={link.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+                      >
+                        <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 mr-2 text-brand-primary">
+                          <MdArrowForward />
+                        </span>
+                        <span className="transform group-hover:translate-x-1 transition-transform duration-300">
+                          {link.text}
+                        </span>
+                      </a>
+                    ) : (
+                      <Link 
+                        to={link.path} 
+                        className="group flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-brand-primary dark:hover:text-brand-primary transition-colors"
+                      >
+                        <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 mr-2 text-brand-primary">
+                          <MdArrowForward />
+                        </span>
+                        <span className="transform group-hover:translate-x-1 transition-transform duration-300">
+                          {link.text}
+                        </span>
+                      </Link>
+                    )}
                 </li>
               ))}
             </ul>
@@ -93,10 +110,10 @@ const Footer = () => {
                   24/7 AVAILABLE
                 </span>
                 <p className="text-sm text-slate-700 dark:text-slate-300 font-medium mb-1">
-                  National Suicide & Crisis Lifeline
+                  iCall Helpline
                 </p>
                 <div className="text-4xl font-black tracking-tight text-red-600 dark:text-red-400 font-mono">
-                  988
+                  9152987821
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                   Call or text immediately. Confidential and trained support is right here.

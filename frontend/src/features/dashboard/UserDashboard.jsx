@@ -157,57 +157,114 @@ const UserDashboard = () => {
       )}
 
       {history.length > 0 && (
-        <section>
-          <h2 className="text-xl font-semibold mb-6 uppercase tracking-widest text-slate-500">Historical Log</h2>
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="glass-panel overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800"
-          >
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-[#1A1C23] border-b border-slate-200 dark:border-slate-800">
-                    <th className="px-6 py-4 font-semibold text-sm">Date</th>
-                    <th className="px-6 py-4 font-semibold text-sm">Framework</th>
-                    <th className="px-6 py-4 font-semibold text-sm">Aggregate Score</th>
-                    <th className="px-6 py-4 font-semibold text-sm">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                  {history.map((record, index) => (
-                    <motion.tr 
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      key={record._id} 
-                      className="hover:bg-slate-50 dark:hover:bg-[#1A1C23] transition-colors group cursor-pointer"
-                    >
-                      <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600 dark:text-slate-400 group-hover:text-brand-primary transition-colors">
-                        {new Date(record.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-medium">
-                        {record.testType}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
-                        {record.finalScore}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          record.status === 'completed' 
-                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                            : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                        }`}>
-                          {record.status}
-                        </span>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
+        <>
+          <section>
+            <h2 className="text-xl font-semibold mb-6 uppercase tracking-widest text-slate-500">Historical Log</h2>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="glass-panel overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800"
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 dark:bg-[#1A1C23] border-b border-slate-200 dark:border-slate-800">
+                      <th className="px-6 py-4 font-semibold text-sm">Date</th>
+                      <th className="px-6 py-4 font-semibold text-sm">Framework</th>
+                      <th className="px-6 py-4 font-semibold text-sm">Aggregate Score</th>
+                      <th className="px-6 py-4 font-semibold text-sm">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                    {history.map((record, index) => (
+                      <motion.tr 
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        key={record._id} 
+                        className="hover:bg-slate-50 dark:hover:bg-[#1A1C23] transition-colors group cursor-pointer"
+                      >
+                        <td className="px-6 py-4 text-sm whitespace-nowrap text-slate-600 dark:text-slate-400 group-hover:text-brand-primary transition-colors">
+                          {new Date(record.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium">
+                          {record.testType}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">
+                          {record.finalScore}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            record.status === 'completed' 
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                              : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                          }`}>
+                            {record.status}
+                          </span>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          </section>
+
+          <section className="mt-16">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Next Steps for You</h2>
+                <p className="text-slate-500 dark:text-slate-400">Personalized resources based on your assessment history.</p>
+              </div>
+              <div className="hidden md:block h-px flex-grow mx-8 bg-slate-200 dark:bg-slate-800" />
             </div>
-          </motion.div>
-        </section>
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-primary/10 via-brand-primary/5 to-purple-600/10 border border-brand-primary/20 p-8 md:p-12 group cursor-pointer"
+              onClick={() => navigate('/health-library/lifestyle')}
+            >
+              {/* Background elements */}
+              <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-80 h-80 bg-brand-primary/20 rounded-full blur-[100px] pointer-events-none group-hover:bg-brand-primary/30 transition-colors duration-700" />
+              
+              <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-white dark:bg-slate-900 shadow-xl flex items-center justify-center relative overflow-hidden group-hover:rotate-3 transition-transform duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <svg className="w-12 h-12 md:w-16 md:h-16 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+
+                <div className="flex-1 text-center md:text-left space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary text-white text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-brand-primary/20">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                    </span>
+                    Unlocked Feature
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white leading-tight">
+                    Healthy & Better <span className="text-brand-primary">Lifestyle</span>
+                  </h3>
+                  <p className="text-lg text-slate-600 dark:text-slate-400 max-w-xl mx-auto md:mx-0">
+                    Great work on completing your assessment! Explore our expert-backed guides on recovery, 
+                    mental hygiene, and simple daily habits tailored for your wellness journey.
+                  </p>
+                  <div className="pt-4">
+                    <button className="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold shadow-xl shadow-slate-900/10 dark:shadow-white/5 hover:-translate-y-1 transition-transform flex items-center gap-2 mx-auto md:mx-0">
+                      Explore Wellness Guide
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </section>
+        </>
       )}
     </div>
   );

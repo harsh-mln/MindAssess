@@ -10,6 +10,9 @@ import UserDashboard from './features/dashboard/UserDashboard';
 import AssessmentEngine from './features/assessment/AssessmentEngine';
 import AuthPage from './features/auth/AuthPage';
 import Profile from './features/profile/Profile';
+import DiseasesPage from './features/health-library/DiseasesPage';
+import SupplementsPage from './features/health-library/SupplementsPage';
+import LifestylePage from './features/health-library/LifestylePage';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/routing/ProtectedRoute';
@@ -42,6 +45,9 @@ function App() {
                 />
                 
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/health-library/diseases" element={<DiseasesPage />} />
+                <Route path="/health-library/drugs" element={<SupplementsPage />} />
+                <Route path="/health-library/lifestyle" element={<LifestylePage />} />
                 
                 {/* Protected Routes */}
                 <Route path="/dashboard" element={

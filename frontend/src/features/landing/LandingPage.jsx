@@ -306,7 +306,7 @@ const LandingPage = () => {
               </div>
               <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500 dark:from-white dark:to-slate-400">1. Adaptive Symptom Mapping</h3>
               <p className="text-slate-600 dark:text-slate-400 mt-3 leading-relaxed text-lg">
-                As you answer, the local assessment engine continually maps your inputs against standardized clinical scales. The branching logic instantly alters the subsequent questions based on preliminary symptom severity detected in real-time.
+                As you answer, the assessment engine continually maps your inputs against standardized clinical scales. The branching logic instantly alters the subsequent questions based on preliminary symptom severity detected in real-time.
               </p>
             </motion.div>
 
@@ -316,7 +316,7 @@ const LandingPage = () => {
               </div>
               <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500 dark:from-white dark:to-slate-400">2. Algorithmic Quantum Scoring</h3>
               <p className="text-slate-600 dark:text-slate-400 mt-3 leading-relaxed text-lg">
-                Instead of simple addition, responses are securely mathematically weighted based on clinical magnitude. The Node.js logic calculates parallel sub-scores across different mental wellness vectors in milliseconds, preventing overlapping bias.
+                Instead of simple addition, responses are securely mathematically weighted based on clinical magnitude. The assessment engine calculates parallel sub-scores across different mental wellness vectors in milliseconds, preventing overlapping bias.
               </p>
             </motion.div>
 
