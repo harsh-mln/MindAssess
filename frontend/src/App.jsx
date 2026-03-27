@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Layout/Navbar';
-import Footer from './components/Layout/Footer';
+import Navbar from './components/Layouts/Navbar';
+import Footer from './components/Layouts/Footer';
 import LandingPage from './features/landing/LandingPage';
 
 // Lazy load the Demo Features page to optimize main bundle size
