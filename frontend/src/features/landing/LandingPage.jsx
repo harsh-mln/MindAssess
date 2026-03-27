@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MdPsychology, MdCalculate, MdAnalytics, MdMood, MdPeople, MdDirectionsRun, MdSync, MdFitnessCenter, MdArrowForward } from 'react-icons/md';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import Antigravity from '../../components/ui/Antigravity';
+import Antigravity from '../../components/UI/Antigravity';
 import { useTheme } from '../../context/ThemeContext';
 
 const FeatureCard = ({ title, description, delay }) => (

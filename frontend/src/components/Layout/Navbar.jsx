@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import ThemeToggle from '../ui/ThemeToggle';
-import GooeyNav from '../ui/GooeyNav';
-import HealthLibraryDropdown from '../ui/HealthLibraryDropdown';
+import ThemeToggle from '../UI/ThemeToggle';
+import GooeyNav from '../UI/GooeyNav';
+import HealthLibraryDropdown from '../UI/HealthLibraryDropdown';
 
 import { useAuth } from '../../context/AuthContext';
 
