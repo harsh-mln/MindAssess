@@ -30,12 +30,13 @@ router.get('/google/callback',
 
     if (process.env.NODE_ENV === 'production') {
       options.secure = true;
+      options.sameSite = 'none';
     }
 
     res.cookie('token', token, options);
     
     // Redirect to frontend dashboard
-    res.redirect('http://localhost:5173/dashboard');
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard`);
   }
 );
 

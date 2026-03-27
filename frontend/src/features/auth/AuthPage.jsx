@@ -137,7 +137,7 @@ export const AuthPage = () => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => window.location.href = 'http://localhost:5000/api/auth/google'}
+            onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || 'https://mental-health-assessment-kjny.onrender.com'}/api/auth/google`}
             className="w-full py-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl font-semibold text-lg transition-all flex justify-center items-center space-x-3 mb-4 shadow-sm"
           >
             <svg viewBox="0 0 24 24" className="w-6 h-6" xmlns="http://www.w3.org/2000/svg">

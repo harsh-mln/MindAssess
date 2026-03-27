@@ -51,7 +51,25 @@ app.use(passport.session());
 app.use(helmet());
 
 // Enable CORS
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173', 
+  process.env.FRONTEND_URL,
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || origin.includes('localhost') || origin.includes('vercel.app') || origin.includes('rendercv')) {
+      callback(null, true);
+    } else if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Crucial for cross-domain cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+}));
 
 // Request logging middleware for debugging
 app.use((req, res, next) => {
